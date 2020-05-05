@@ -40,7 +40,7 @@ export default {
   background-color:aqua;
   width: 500px;
   height: 300px;
-  margin: 100px auto
+  margin: 10px auto
 }
 .red {
   color :red;

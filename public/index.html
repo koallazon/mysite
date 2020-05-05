@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="overflow-y: auto;">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,4 +16,19 @@
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAd7s1UMp8T76WyGU0C0b1Riivw0T8q10U",
+      authDomain: "mysite-cf643.firebaseapp.com",
+      databaseURL: "https://mysite-cf643.firebaseio.com",
+      projectId: "mysite-cf643",
+      storageBucket: "mysite-cf643.appspot.com",
+      messagingSenderId: "283033842653",
+      appId: "1:283033842653:web:8834088756ab52e4f27c34"
+    };
+    firebase.initializeApp(config);
+
+    // Get a reference to the database service
+    var database = firebase.database();
+  </script>
 </html>
