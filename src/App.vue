@@ -43,8 +43,14 @@
         <site-title :title="title" />
       </v-toolbar-title>
       <v-spacer />
-      <v-btn text>
-        <span>로그인</span>
+      <v-btn text @click="save()">
+        <span>쓰기</span>
+      </v-btn>
+      <v-btn text @click="read()">
+        <span>읽기</span>
+      </v-btn>
+      <v-btn text @click="readOne()">
+        <span>한번 읽기</span>
       </v-btn>
     </v-app-bar>
 
@@ -100,7 +106,28 @@ export default {
         ]
       }
     ]
-  })
+  }),
+  methods: {
+    save () {
+      console.log('save')
+      this.$firebase.database().ref().child('abcd').set({
+        title: 'abcd', text: 'tttt'
+      })
+    },
+    read () {
+      this.$firebase.database().ref().child('abcd').on('value', (sn) => {
+        console.log(sn)
+        console.log(sn.val())
+      })
+    },
+    async readOne () {
+      const r = await this.$firebase.database().ref().child('abcd').once('value')
+      console.log(sn.val())
+    }
+  },
+  mounted () {
+    console.log(this.$firebase)
+  }
 }
 </script>
 
