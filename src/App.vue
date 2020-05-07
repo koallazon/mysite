@@ -15,7 +15,7 @@
         >
           <template v-slot:activator>
             <v-list-item-content>
-              <v-list-item-title v-text="item.title"></v-list-item-title>
+              <v-list-item-title></v-list-item-title>
             </v-list-item-content>
           </template>
 
@@ -39,9 +39,6 @@
       dark
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title>
-        <site-title :title="title" />
-      </v-toolbar-title>
       <v-spacer />
       <v-btn text @click="save()">
         <span>쓰기</span>
@@ -55,6 +52,7 @@
     </v-app-bar>
 
     <v-content>
+      <div class="text-center display-1 pt-2">{{title}}</div>
       <router-view></router-view>
     </v-content>
 
@@ -70,15 +68,12 @@
 </template>
 
 <script>
-import SiteTitle from '@/components/title'
+import axios from 'axios'
 
 export default {
-  components: {
-    SiteTitle
-  },
   data: () => ({
     drawer: false,
-    title: '나만의 사이트',
+    title: null,
     items: [
       {
         title: 'home',
@@ -123,10 +118,27 @@ export default {
     async readOne () {
       const r = await this.$firebase.database().ref().child('abcd').once('value')
       console.log(sn.val())
+    },
+    async getTitle () {
+      const res = await axios.get('http://localhost:3000/sorry')
+      console.log(res)
+      this.title= res.data
+      /*
+        axios.get('http://newsapi.org/v2/top-headlines?country=kr&apiKey=3763b3e4dffb41d79e351431946efed0')
+          .then(response => {
+            console.log(response)
+          }).catch(err => {
+            console.log(err)
+          })
+      */
+      //this.title = res.data
     }
   },
+  created () {
+    this.getTitle()
+  },
   mounted () {
-    console.log(this.$firebase)
+    //console.log(this.$firebase)
   }
 }
 </script>

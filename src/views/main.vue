@@ -22,7 +22,7 @@ export default {
   },
   computed: {
     result () {
-      console.log(this.$router)
+      //console.log(this.$router)
       return '123'
     }
   },
