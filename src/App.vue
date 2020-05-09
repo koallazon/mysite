@@ -39,6 +39,7 @@
       dark
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <title-component :title="site.title"></title-component>
       <v-spacer />
       <v-btn text @click="save()">
         <span>쓰기</span>
@@ -57,23 +58,29 @@
     </v-content>
 
     <!-- 꼬릿말 -->
-    <v-footer
-      color="indigo darken-4"
-      app
-      dark
-    >
-      <span>Copyright &copy; 2020.LeeTaegyu. All rights resered </span>
-    </v-footer>
+    <footer-component :footer="site.footer"></footer-component>
   </v-app>
 </template>
 
 <script>
 import axios from 'axios'
+import TitleComponent from './components/title'
+import FooterComponent from './components/footer'
 
 export default {
+  components: {
+    TitleComponent,
+    FooterComponent
+  },
   data: () => ({
     drawer: false,
     title: null,
+    site: {
+      mene: [],
+      title: '이태규의 블로그',
+      footer: "Copyright &copy; 2020.LeeTaegyu. All rights resered"
+    },
+    text: null,
     items: [
       {
         title: 'home',
@@ -105,9 +112,13 @@ export default {
   methods: {
     save () {
       console.log('save')
-      this.$firebase.database().ref().child('abcd').set({
-        title: 'abcd', text: 'tttt'
-      })
+      setTimeout(() => {
+        for(let i = 0; i < 3; i++) {
+          this.$firebase.database().ref().child('abcd').set({
+            title: 'abcd', text: "number"+i
+          })
+        }
+      },1000)
     },
     read () {
       this.$firebase.database().ref().child('abcd').on('value', (sn) => {
@@ -117,25 +128,28 @@ export default {
     },
     async readOne () {
       const r = await this.$firebase.database().ref().child('abcd').once('value')
-      console.log(sn.val())
     },
+    /*
     async getTitle () {
       const res = await axios.get('http://localhost:3000/sorry')
       console.log(res)
       this.title= res.data
-      /*
-        axios.get('http://newsapi.org/v2/top-headlines?country=kr&apiKey=3763b3e4dffb41d79e351431946efed0')
-          .then(response => {
-            console.log(response)
-          }).catch(err => {
-            console.log(err)
-          })
-      */
-      //this.title = res.data
+    },
+    */
+    subscribe () {
+      this.$firebase.database().ref().child('site').on('value', (sn) => {        
+        const v = sn.val()
+        if (!v) {
+          this.$firebase.database().ref().child('site').set(this.site)
+          return
+        }
+        this.site = v
+      })
     }
   },
   created () {
-    this.getTitle()
+    //this.getTitle()
+    this.subscribe()
   },
   mounted () {
     //console.log(this.$firebase)
