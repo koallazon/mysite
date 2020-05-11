@@ -1,37 +1,5 @@
 <template>
   <v-app>
-    <!-- 모바일 네비게이션 -->
-    <v-navigation-drawer
-      v-model="drawer"
-      app
-    >
-      <v-list>
-        <v-list-group
-          v-for="(item, i) in items"
-          :key="i"
-          v-model="item.active"
-          :prepend-icon="item.icon"
-          no-action
-        >
-          <template v-slot:activator>
-            <v-list-item-content>
-              <v-list-item-title></v-list-item-title>
-            </v-list-item-content>
-          </template>
-
-          <v-list-item
-            v-for="subItem in item.subItems"
-            :key="subItem.title"
-            :to="subItem.to"
-          >
-            <v-list-item-content>
-              <v-list-item-title v-text="subItem.title"></v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-group>
-      </v-list>
-    </v-navigation-drawer>
-
     <!-- header -->
     <v-app-bar
       app
@@ -51,7 +19,13 @@
         <span>한번 읽기</span>
       </v-btn>
     </v-app-bar>
-
+    <v-navigation-drawer
+      v-model="drawer"
+      app
+      width="400"
+    >
+      <menu-component :items="site.menu" />
+    </v-navigation-drawer> 
     <v-content>
       <div class="text-center display-1 pt-2">{{title}}</div>
       <router-view></router-view>
@@ -65,11 +39,13 @@
 <script>
 import axios from 'axios'
 import TitleComponent from './components/title'
+import menuComponent from './components/menu'
 import FooterComponent from './components/footer'
 
 export default {
   components: {
     TitleComponent,
+    menuComponent,
     FooterComponent
   },
   data: () => ({
@@ -80,34 +56,7 @@ export default {
       title: '이태규의 블로그',
       footer: "Copyright &copy; 2020.LeeTaegyu. All rights resered"
     },
-    text: null,
-    items: [
-      {
-        title: 'home',
-        icon: 'mdi-home',
-        subItems: [
-          {
-            title: 'Dashboard',
-            to: '/'
-          },
-          {
-            title: 'About',
-            to: '/about'
-          }
-        ]
-      },
-      {
-        title: 'about',
-        active: true,
-        icon: 'mdi-account',
-        subItems: [
-          {
-            title: 'two',
-            to: '/two'
-          }
-        ]
-      }
-    ]
+    text: null
   }),
   methods: {
     save () {
@@ -129,13 +78,6 @@ export default {
     async readOne () {
       const r = await this.$firebase.database().ref().child('abcd').once('value')
     },
-    /*
-    async getTitle () {
-      const res = await axios.get('http://localhost:3000/sorry')
-      console.log(res)
-      this.title= res.data
-    },
-    */
     subscribe () {
       this.$firebase.database().ref().child('site').on('value', (sn) => {        
         const v = sn.val()
@@ -144,15 +86,13 @@ export default {
           return
         }
         this.site = v
+        console.log(this.site)
       })
     }
   },
   created () {
     //this.getTitle()
     this.subscribe()
-  },
-  mounted () {
-    //console.log(this.$firebase)
   }
 }
 </script>
