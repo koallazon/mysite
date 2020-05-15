@@ -60,7 +60,6 @@ export default {
   }),
   methods: {
     save () {
-      console.log('save')
       setTimeout(() => {
         for(let i = 0; i < 3; i++) {
           this.$firebase.database().ref().child('abcd').set({
@@ -71,8 +70,6 @@ export default {
     },
     read () {
       this.$firebase.database().ref().child('abcd').on('value', (sn) => {
-        console.log(sn)
-        console.log(sn.val())
       })
     },
     async readOne () {
@@ -86,7 +83,6 @@ export default {
           return
         }
         this.site = v
-        console.log(this.site)
       })
     }
   },
